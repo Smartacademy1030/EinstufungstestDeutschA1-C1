@@ -1,0 +1,920 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Deutsch Einstufungstest</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1e40af;
+            --secondary: #0f172a;
+            --bg-light: #f8fafc;
+            --surface: #ffffff;
+            --text: #334155;
+            --text-light: #64748b;
+            --border: #e2e8f0;
+            --success: #16a34a;
+            --accent: #f59e0b;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-light);
+            color: var(--text);
+            line-height: 1.6;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 40px auto;
+            background: var(--surface);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 20px;
+        }
+
+        h1 {
+            color: var(--secondary);
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Progress Steps */
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 40px;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: var(--border);
+            z-index: 1;
+            transform: translateY(-50%);
+        }
+
+        .step {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--surface);
+            border: 2px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            z-index: 2;
+            transition: all 0.3s ease;
+            color: var(--text-light);
+        }
+
+        .step.active {
+            border-color: var(--primary);
+            background: var(--primary);
+            color: white;
+            box-shadow: 0 0 0 4px rgba(37, 99, 237, 0.2);
+        }
+
+        .step.completed {
+            border-color: var(--success);
+            background: var(--success);
+            color: white;
+        }
+
+        /* Screens */
+        .screen {
+            display: none;
+        }
+
+        .screen.active {
+            display: block;
+            animation: fadeIn 0.5s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Typography & UI Blocks */
+        h2 {
+            margin-bottom: 20px;
+            color: var(--secondary);
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        p {
+            margin-bottom: 20px;
+        }
+
+        .instructions {
+            background: #eff6ff;
+            border-left: 4px solid var(--primary);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 30px;
+            font-size: 0.95rem;
+        }
+
+        /* Question Styles */
+        .question-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            transition: border-color 0.3s ease;
+        }
+
+        .question-card:hover {
+            border-color: #cbd5e1;
+        }
+
+        .question-text {
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .level-badge {
+            display: inline-block;
+            background: #f1f5f9;
+            color: var(--text-light);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+        }
+
+        .options-list {
+            list-style: none;
+        }
+
+        .option-item {
+            margin-bottom: 10px;
+        }
+
+        .option-item label {
+            display: flex;
+            align-items: center;
+            padding: 12px 15px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .option-item label:hover {
+            background: var(--bg-light);
+            border-color: #cbd5e1;
+        }
+
+        .option-item input[type="radio"] {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--primary);
+        }
+
+        .option-item input[type="radio"]:checked + span {
+            font-weight: 600;
+        }
+
+        .option-item label.selected {
+            background: #eff6ff;
+            border-color: var(--primary);
+        }
+
+        /* Audio Controls */
+        .audio-player-mock {
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .audio-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            transition: background 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(37, 99, 237, 0.2);
+        }
+
+        .audio-btn:hover {
+            background: var(--primary-dark);
+        }
+
+        .audio-btn:disabled {
+            background: var(--text-light);
+            cursor: not-allowed;
+        }
+
+        .transcript-toggle {
+            background: none;
+            border: none;
+            color: var(--primary);
+            text-decoration: underline;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .transcript-box {
+            display: none;
+            background: var(--surface);
+            border: 1px dashed var(--border);
+            padding: 15px;
+            border-radius: 8px;
+            width: 100%;
+            font-style: italic;
+            font-size: 0.95rem;
+        }
+
+        /* Writing Box */
+        .writing-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .writing-prompt {
+            font-weight: 600;
+            background: #fffbeb;
+            border-left: 4px solid var(--accent);
+            padding: 15px;
+            border-radius: 0 8px 8px 0;
+        }
+
+        textarea {
+            width: 100%;
+            height: 250px;
+            padding: 15px;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            resize: vertical;
+            font-size: 1rem;
+            line-height: 1.5;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        textarea:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(37, 99, 237, 0.1);
+        }
+
+        .word-counter {
+            text-align: right;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* Navigation Buttons */
+        .nav-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            border-top: 1px solid var(--border);
+            padding-top: 20px;
+        }
+
+        .btn {
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+            border: none;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-dark);
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: var(--text);
+        }
+
+        .btn-secondary:hover {
+            background: #cbd5e1;
+        }
+
+        /* Message box replacing alerts */
+        .message-box {
+            display: none;
+            background: #fef2f2;
+            color: #991b1b;
+            border: 1px solid #fca5a5;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        /* Result Dashboard */
+        .result-dashboard {
+            text-align: center;
+        }
+
+        .score-badge {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 120px;
+            height: 120px;
+            background: var(--primary);
+            color: white;
+            font-size: 3rem;
+            font-weight: 800;
+            border-radius: 50%;
+            margin: 20px 0;
+            box-shadow: 0 8px 16px rgba(37, 99, 237, 0.3);
+        }
+
+        .section-breakdown {
+            margin: 30px 0;
+            text-align: left;
+            background: #f1f5f9;
+            padding: 20px;
+            border-radius: 12px;
+        }
+
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .breakdown-row:last-child {
+            border-bottom: none;
+        }
+
+        .justification-card {
+            background: #f8fafc;
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .justification-title {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Deutsch Einstufungstest</h1>
+            <div class="subtitle">Finden Sie Ihr GER-Sprachniveau von A1 bis C1 heraus</div>
+        </header>
+
+        <!-- Status Progress Bar -->
+        <div class="progress-steps" id="progressSteps">
+            <div class="step active" data-step="1">1</div>
+            <div class="step" data-step="2">2</div>
+            <div class="step" data-step="3">3</div>
+            <div class="step" data-step="4">4</div>
+            <div class="step" data-step="5">5</div>
+        </div>
+
+        <div id="error-message" class="message-box"></div>
+
+        <!-- SCREEN 1: WELCOME & START -->
+        <div id="screen-1" class="screen active">
+            <h2>Willkommen zum Einstufungstest!</h2>
+            <p>Dieser Test bewertet Ihre Deutschkenntnisse systematisch in drei Kompetenzbereichen nach dem Gemeinsamen Europäischen Referenzrahmen (GER):</p>
+            <div class="instructions">
+                <ul>
+                    <li><strong>Teil 1: Lesen (Leseverstehen)</strong> – 10 Multiple-Choice-Fragen (von A1 bis C1).</li>
+                    <li><strong>Teil 2: Hören (Hörverstehen)</strong> – 5 Fragen basierend auf Audio-Texten (wird vorgelesen).</li>
+                    <li><strong>Teil 3: Schreiben (Schriftlicher Ausdruck)</strong> – Ein freier Text zu einem bestimmten Thema.</li>
+                </ul>
+                <br>
+                <p>Am Ende erhalten Sie Ihr detailliertes Ergebnis (A1, A2, B1, B2 oder C1) inklusive einer fundierten linguistischen Begründung.</p>
+            </div>
+            <p>Nehmen Sie sich ausreichend Zeit. Verwenden Sie keine Wörterbücher oder Hilfsmittel, um ein unverfälschtes Ergebnis zu erzielen.</p>
+            <div class="nav-buttons" style="justify-content: flex-end;">
+                <button class="btn btn-primary" onclick="nextScreen()">Test starten</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 2: LESEN -->
+        <div id="screen-2" class="screen">
+            <h2>Teil 1: Leseverstehen</h2>
+            <div class="instructions">
+                Wählen Sie für jede der folgenden Grammatik- und Leseaufgaben die einzig richtige Antwortoption aus. Die Fragen werden im Verlauf anspruchsvoller.
+            </div>
+            <div id="lesen-questions-container"></div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Zurück</button>
+                <button class="btn btn-primary" onclick="validateAndNext(2)">Weiter zum Hörverstehen</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 3: HOEREN -->
+        <div id="screen-3" class="screen">
+            <h2>Teil 2: Hörverstehen</h2>
+            <div class="instructions">
+                Klicken Sie auf "Audio abspielen", um den Text anzuhören (Sprachausgabe muss aktiv sein). Beantworten Sie anschließend die dazugehörigen Fragen. Falls Sie kein Audio hören können, nutzen Sie den Link, um das Transkript einzublenden.
+            </div>
+
+            <!-- Audio Section 1 -->
+            <div class="audio-player-mock">
+                <strong>🎧 Audio-Text 1 (Alltagssituation)</strong>
+                <button class="audio-btn" onclick="playAudio(1, 'Hallo Anna, treffen wir uns heute um 15 Uhr im Café Central? - Nein, tut mir leid, um 15 Uhr muss ich zum Arzt. Geht auch 17 Uhr? - Ja, das passt perfekt. Bis später!')">
+                    🔊 Audio abspielen
+                </button>
+                <button class="transcript-toggle" onclick="toggleTranscript(1)">Text-Transkript anzeigen (Barrierefreiheit)</button>
+                <div id="transcript-1" class="transcript-box">
+                    "Hallo Anna, treffen wir uns heute um 15 Uhr im Café Central? - Nein, tut mir leid, um 15 Uhr muss ich zum Arzt. Geht auch 17 Uhr? - Ja, das passt perfekt. Bis später!"
+                </div>
+            </div>
+            <div id="hoeren-group-1"></div>
+
+            <!-- Audio Section 2 -->
+            <div class="audio-player-mock">
+                <strong>🎧 Audio-Text 2 (Praxis-Ankündigung)</strong>
+                <button class="audio-btn" onclick="playAudio(2, 'Guten Tag, hier ist die Arztpraxis Dr. Weber. Wir müssen Ihren Termin für morgen Nachmittag leider verschieben, da der Arzt krank ist. Bitte rufen Sie uns zurück, um einen neuen Termin zu vereinbaren. Die Praxis ist morgen bis 12 Uhr telefonisch erreichbar.')">
+                    🔊 Audio abspielen
+                </button>
+                <button class="transcript-toggle" onclick="toggleTranscript(2)">Text-Transkript anzeigen (Barrierefreiheit)</button>
+                <div id="transcript-2" class="transcript-box">
+                    "Guten Tag, hier ist die Arztpraxis Dr. Weber. Wir müssen Ihren Termin für morgen Nachmittag leider verschieben, da der Arzt krank ist. Bitte rufen Sie uns zurück, um einen neuen Termin zu vereinbaren. Die Praxis ist morgen bis 12 Uhr telefonisch erreichbar."
+                </div>
+            </div>
+            <div id="hoeren-group-2"></div>
+
+            <!-- Audio Section 3 -->
+            <div class="audio-player-mock">
+                <strong>🎧 Audio-Text 3 (Radiobericht)</strong>
+                <button class="audio-btn" onclick="playAudio(3, 'Die fortschreitende Digitalisierung verändert die moderne Arbeitswelt in einem rasanten Tempo. Während die Automatisierung traditionelle Arbeitsplätze gefährdet, entstehen gleichzeitig völlig neue Berufsfelder im IT- und Dienstleistungssektor. Experten betonen nachdrücklich, dass kontinuierliche Weiterbildung die fundamentale Schlüsselkompetenz der Zukunft darstellt, um mit diesem strukturellen Wandel Schritt halten zu können.')">
+                    🔊 Audio abspielen
+                </button>
+                <button class="transcript-toggle" onclick="toggleTranscript(3)">Text-Transkript anzeigen (Barrierefreiheit)</button>
+                <div id="transcript-3" class="transcript-box">
+                    "Die fortschreitende Digitalisierung verändert die moderne Arbeitswelt in einem rasanten Tempo. Während die Automatisierung traditionelle Arbeitsplätze gefährdet, entstehen gleichzeitig völlig neue Berufsfelder im IT- und Dienstleistungssektor. Experten betonen nachdrücklich, dass kontinuierliche Weiterbildung die fundamentale Schlüsselkompetenz der Zukunft darstellt, um mit diesem strukturellen Wandel Schritt halten zu können."
+                </div>
+            </div>
+            <div id="hoeren-group-3"></div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Zurück</button>
+                <button class="btn btn-primary" onclick="validateAndNext(3)">Weiter zum Schreiben</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 4: SCHREIBEN -->
+        <div id="screen-4" class="screen">
+            <h2>Teil 3: Schriftlicher Ausdruck</h2>
+            <div class="instructions">
+                Verfassen Sie einen zusammenhängenden Text zum unten stehenden Thema. Versuchen Sie, Ihr sprachliches Maximum zu zeigen (komplexe Satzstrukturen, Nebensätze, fortgeschrittenes Vokabular).
+            </div>
+            
+            <div class="writing-container">
+                <div class="writing-prompt">
+                    <strong>Thema: Vor- und Nachteile von Homeoffice (Arbeiten von zu Hause)</strong><br>
+                    Nehmen Sie Stellung: Welche Vorteile bietet Homeoffice für Arbeitnehmer und Firmen, und welche Herausforderungen oder Nachteile bringt es mit sich?
+                </div>
+                <textarea id="schreiben-input" placeholder="Schreiben Sie hier Ihren Text auf Deutsch (Empfohlen: 80 - 150 Wörter)..." oninput="countWords()"></textarea>
+                <div class="word-counter">Wortanzahl: <span id="word-count">0</span> Wörter</div>
+            </div>
+
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="prevScreen()">Zurück</button>
+                <button class="btn btn-primary" onclick="validateAndNext(4)">Test auswerten</button>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: RESULT -->
+        <div id="screen-5" class="screen result-dashboard">
+            <h2>Ihr Testergebnis</h2>
+            <p>Herzlichen Glückwunsch! Sie haben alle drei Teile des Tests erfolgreich absolviert. Hier ist Ihre Einstufung:</p>
+            
+            <div class="score-badge" id="final-level">--</div>
+            
+            <div class="section-breakdown">
+                <h3>Ergebnis-Aufschlüsselung</h3>
+                <div class="breakdown-row">
+                    <span><strong>Teil 1: Leseverstehen</strong></span>
+                    <span id="score-lesen">0 / 10 richtig</span>
+                </div>
+                <div class="breakdown-row">
+                    <span><strong>Teil 2: Hörverstehen</strong></span>
+                    <span id="score-hoeren">0 / 5 richtig</span>
+                </div>
+                <div class="breakdown-row">
+                    <span><strong>Teil 3: Schriftlicher Ausdruck</strong></span>
+                    <span id="writing-metrics">0 Wörter analysiert</span>
+                </div>
+            </div>
+
+            <div class="justification-card">
+                <div class="justification-title">💡 Linguistische Begründung Ihrer Niveaustufe:</div>
+                <p id="justification-text">Berechne Auswertung...</p>
+            </div>
+
+            <div class="nav-buttons" style="justify-content: center;">
+                <button class="btn btn-primary" onclick="restartTest()">Test wiederholen</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Database of Questions
+        const lesenQuestions = [
+            { id: 'l1', level: 'A1', q: 'Guten Tag! Wie ___ Ihr Name?', o: ['ist', 'von', 'heißt'], a: 0 },
+            { id: 'l2', level: 'A1', q: 'Ich komme aus Italien, aber ich ___ jetzt in Berlin.', o: ['wohne', 'kommen', 'her', 'bin'], a: 0 },
+            { id: 'l3', level: 'A2', q: 'Was hast du gestern gemacht? - Ich ___ im Kino gewesen.', o: ['habe', 'bin', 'hatte', 'wurde'], a: 1 },
+            { id: 'l4', level: 'A2', q: 'Morgen kann ich nicht kommen, ___ ich arbeiten muss.', o: ['weil', 'dass', 'obwohl', 'deshalb'], a: 0 },
+            { id: 'l5', level: 'B1', q: 'Erinnerst du dich noch ___ unseren letzten Urlaub in Wien?', o: ['an', 'auf', 'über', 'für'], a: 0 },
+            { id: 'l6', level: 'B1', q: 'Das Auto, ___ ich mir letzte Woche gekauft habe, blockiert die Einfahrt.', o: ['das', 'welches', 'dessen', 'dem'], a: 0 },
+            { id: 'l7', level: 'B2', q: 'Je länger er über das mathematische Problem nachdachte, ___ klarer wurde ihm die Lösung.', o: ['desto', 'umso', 'wie', 'mehr'], a: 0 },
+            { id: 'l8', level: 'B2', q: 'Die Chefetage entschied sich dafür, das riskante Projekt trotz aller Bedenken ___.', o: ['fortzuführen', 'fortführen', 'fortzufahren', 'fortgeführt'], a: 0 },
+            { id: 'l9', level: 'C1', q: 'Angesichts der anhaltenden wirtschaftlichen Stagnation müssen unweigerlich drastische Sparmaßnahmen ___ werden.', o: ['ergriffen', 'getroffen', 'vorgenommen', 'vollzogen'], a: 0 },
+            { id: 'l10', level: 'C1', q: 'Er verhielt sich während der gesamten Krisensitzung so, als ___ er von den massiven Defiziten überhaupt nichts gewusst.', o: ['hätte', 'habe', 'hat', 'wäre'], a: 0 }
+        ];
+
+        const hoerenQuestions = [
+            { id: 'h1', group: 1, level: 'A1', q: 'Wo wollen sich die beiden Personen ursprünglich treffen?', o: ['Im Café Central', 'Beim Arzt', 'Im Kino'], a: 0 },
+            { id: 'h2', group: 1, level: 'A2', q: 'Warum kann Anna nicht bereits um 15:00 Uhr erscheinen?', o: ['Weil sie einen Arzttermin wahrnehmen muss', 'Weil sie länger arbeiten muss', 'Weil sie das Café nicht findet'], a: 0 },
+            { id: 'h3', group: 2, level: 'B1', q: 'Aus welchem Grund muss die Arztpraxis den Termin absagen?', o: ['Der behandelnde Arzt ist erkrankt', 'Die Praxis bleibt wegen Umbaus geschlossen', 'Der Patient hat den Termin verwechselt'], a: 0 },
+            { id: 'h4', group: 2, level: 'B2', q: 'Was wird dem Patienten auf dem Anrufbeantworter explizit nahegelegt?', o: ['Sich morgen vor 12 Uhr telefonisch zwecks Neuvereinbarung zu melden', 'Einfach morgen Nachmittag ohne Anmeldung vorbeizukommen', 'Auf einen schriftlichen Brief der Praxis zu warten'], a: 0 },
+            { id: 'h5', group: 3, level: 'C1', q: 'Welche Kernaussage lässt sich aus dem Radiobericht zur Digitalisierung ableiten?', o: ['Kontinuierliche Weiterbildung ist essenziell, um dem strukturellen Wandel zu begegnen', 'Traditionelle Berufsfelder werden durch die IT komplett ohne Ersatz eliminiert', 'Die Modernisierung betrifft primär den industriellen Sektor und kaum Dienstleistungen'], a: 0 }
+        ];
+
+        let currentScreen = 1;
+
+        // Initialize Test Panels
+        function initTest() {
+            renderLesenQuestions();
+            renderHoerenQuestions();
+        }
+
+        function renderLesenQuestions() {
+            const container = document.getElementById('lesen-questions-container');
+            container.innerHTML = '';
+            lesenQuestions.forEach((q, index) => {
+                container.appendChild(createQuestionCard(q, index, 'lesen'));
+            });
+        }
+
+        function renderHoerenQuestions() {
+            const g1 = document.getElementById('hoeren-group-1');
+            const g2 = document.getElementById('hoeren-group-2');
+            const g3 = document.getElementById('hoeren-group-3');
+            
+            g1.innerHTML = ''; g2.innerHTML = ''; g3.innerHTML = '';
+
+            hoerenQuestions.forEach((q, index) => {
+                const card = createQuestionCard(q, index, 'hoeren');
+                if (q.group === 1) g1.appendChild(card);
+                else if (q.group === 2) g2.appendChild(card);
+                else if (q.group === 3) g3.appendChild(card);
+            });
+        }
+
+        function createQuestionCard(q, index, type) {
+            const card = document.createElement('div');
+            card.className = 'question-card';
+            
+            let optionsHTML = '';
+            q.o.forEach((opt, oIdx) => {
+                optionsHTML += `
+                    <li class="option-item">
+                        <label id="label-${type}-${index}-${oIdx}">
+                            <input type="radio" name="${type}-${index}" value="${oIdx}" onchange="selectOption('${type}', ${index}, ${oIdx})">
+                            <span>${escapeHtml(opt)}</span>
+                        </label>
+                    </li>
+                `;
+            });
+
+            card.innerHTML = `
+                <div class="level-badge">${q.level}</div>
+                <div class="question-text">${index + 1}. ${escapeHtml(q.q)}</div>
+                <ul class="options-list">${optionsHTML}</ul>
+            `;
+            return card;
+        }
+
+        function selectOption(type, qIdx, oIdx) {
+            // Remove previous selections visually
+            const radioGroup = document.getElementsByName(`${type}-${qIdx}`);
+            radioGroup.forEach((radio, idx) => {
+                const lbl = document.getElementById(`label-${type}-${qIdx}-${idx}`);
+                if (lbl) lbl.classList.remove('selected');
+            });
+            // Highlight current
+            const currentLabel = document.getElementById(`label-${type}-${qIdx}-${oIdx}`);
+            if (currentLabel) currentLabel.classList.add('selected');
+            hideError();
+        }
+
+        // Web Speech API wrapper for Listening part
+        function playAudio(id, text) {
+            if ('speechSynthesis' in window) {
+                // Cancel ongoing speech
+                window.speechSynthesis.cancel();
+                
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'de-DE';
+                utterance.rate = 0.85; // slightly slower for language learners
+                
+                window.speechSynthesis.speak(utterance);
+            } else {
+                showError("Die Sprachausgabe wird von Ihrem Browser leider nicht nativ unterstützt. Bitte blenden Sie das Text-Transkript ein.");
+            }
+        }
+
+        function toggleTranscript(id) {
+            const box = document.getElementById(`transcript-${id}`);
+            if (box.style.display === 'block') {
+                box.style.display = 'none';
+            } else {
+                box.style.display = 'block';
+            }
+        }
+
+        function countWords() {
+            const text = document.getElementById('schreiben-input').value.trim();
+            const words = text ? text.split(/\s+/).length : 0;
+            document.getElementById('word-count').innerText = words;
+            hideError();
+        }
+
+        // Navigation Management
+        function showScreen(screenNum) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById(`screen-${screenNum}`).classList.add('active');
+            
+            // Sync progress steps bar
+            document.querySelectorAll('.step').forEach(step => {
+                const sVal = parseInt(step.getAttribute('data-step'));
+                step.classList.remove('active', 'completed');
+                if (sVal === screenNum) {
+                    step.classList.add('active');
+                } else if (sVal < screenNum) {
+                    step.classList.add('completed');
+                }
+            });
+            window.scrollTo(0, 0);
+        }
+
+        function nextScreen() {
+            if (currentScreen < 5) {
+                currentScreen++;
+                showScreen(currentScreen);
+            }
+        }
+
+        function prevScreen() {
+            if (currentScreen > 1) {
+                currentScreen--;
+                showScreen(currentScreen);
+                hideError();
+            }
+        }
+
+        function showError(msg) {
+            const errBox = document.getElementById('error-message');
+            errBox.innerText = msg;
+            errBox.style.display = 'block';
+            window.scrollTo(0, 0);
+        }
+
+        function hideError() {
+            document.getElementById('error-message').style.display = 'none';
+        }
+
+        function validateAndNext(stage) {
+            if (stage === 2) {
+                // Validate Lesen questions are all filled
+                for (let i = 0; i < lesenQuestions.length; i++) {
+                    const selected = document.querySelector(`input[name="lesen-${i}"]:checked`);
+                    if (!selected) {
+                        showError(`Bitte beantworten Sie Frage ${i + 1} im Abschnitt Leseverstehen.`);
+                        return;
+                    }
+                }
+                hideError();
+                nextScreen();
+            } else if (stage === 3) {
+                // Validate Hoeren questions
+                for (let i = 0; i < hoerenQuestions.length; i++) {
+                    const selected = document.querySelector(`input[name="hoeren-${i}"]:checked`);
+                    if (!selected) {
+                        showError(`Bitte beantworten Sie Frage ${i + 1} im Abschnitt Hörverstehen.`);
+                        return;
+                    }
+                }
+                hideError();
+                nextScreen();
+            } else if (stage === 4) {
+                // Validate writing field
+                const text = document.getElementById('schreiben-input').value.trim();
+                const wordCount = text ? text.split(/\s+/).length : 0;
+                if (wordCount < 15) {
+                    showError("Bitte verfassen Sie einen etwas längeren Text (mindestens 15 Wörter), damit eine linguistische Auswertung möglich ist.");
+                    return;
+                }
+                hideError();
+                evaluateTest();
+                nextScreen();
+            }
+        }
+
+        // Evaluation & Justification Logic Engine
+        function evaluateTest() {
+            let scoreLesen = 0;
+            let scoreHoeren = 0;
+
+            // 1. Evaluate Multiple Choice
+            lesenQuestions.forEach((q, idx) => {
+                const checked = document.querySelector(`input[name="lesen-${idx}"]:checked`);
+                if (checked && parseInt(checked.value) === q.a) {
+                    scoreLesen++;
+                }
+            });
+
+            hoerenQuestions.forEach((q, idx) => {
+                const checked = document.querySelector(`input[name="hoeren-${idx}"]:checked`);
+                if (checked && parseInt(checked.value) === q.a) {
+                    scoreHoeren++;
+                }
+            });
+
+            // 2. Evaluate Writing (Text-Mining via Grammatical Indicators & Word Count)
+            const textInput = document.getElementById('schreiben-input').value.toLowerCase();
+            const wordCount = textInput ? textInput.split(/\s+/).length : 0;
+
+            // Markers for language complexity
+            const b1Markers = ['weil', 'dass', 'wenn', 'deshalb', 'deswegen', 'aber', 'oder', 'denn'];
+            const b2Markers = ['obwohl', 'während', 'deshalb', 'trotzdem', 'je mehr', 'desto', 'sowohl als auch', 'entweder', 'außerdem', 'darüber hinaus'];
+            const c1Markers = ['angesichts', 'infolgedessen', 'demzufolge', 'vorausgesetzt', 'folglich', 'meines erachtens', 'hinsichtlich', 'bezüglich', 'herausforderung', 'vorteilhaft', 'nachteilig'];
+
+            let detectedB1 = b1Markers.filter(m => textInput.includes(m)).length;
+            let detectedB2 = b2Markers.filter(m => textInput.includes(m)).length;
+            let detectedC1 = c1Markers.filter(m => textInput.includes(m)).length;
+
+            // Baseline calculation from MC
+            let totalMcScore = scoreLesen + scoreHoeren; // Max 15 points
+            let estimatedLevel = 'A1';
+
+            if (totalMcScore >= 13) estimatedLevel = 'C1';
+            else if (totalMcScore >= 10) estimatedLevel = 'B2';
+            else if (totalMcScore >= 7) estimatedLevel = 'B1';
+            else if (totalMcScore >= 4) estimatedLevel = 'A2';
+            else estimatedLevel = 'A1';
+
+            // Adapt based on writing metrics (Quality Gate)
+            if (estimatedLevel === 'C1' && (wordCount < 80 || detectedC1 < 1)) {
+                estimatedLevel = 'B2'; // Demotion due to writing simplicity
+            } else if (estimatedLevel === 'B2' && (wordCount < 50 || (detectedB2 === 0 && detectedC1 === 0))) {
+                estimatedLevel = 'B1';
+            } else if (estimatedLevel === 'B1' && wordCount < 30) {
+                estimatedLevel = 'A2';
+            }
+
+            // Fallback safety to bump up if writing is exceptional but MC was slightly lower
+            if (estimatedLevel === 'B2' && detectedC1 >= 3 && wordCount > 110 && totalMcScore >= 11) {
+                estimatedLevel = 'C1';
+            }
+            if (estimatedLevel === 'B1' && detectedB2 >= 3 && wordCount > 80 && totalMcScore >= 8) {
+                estimatedLevel = 'B2';
+            }
+
+            // Display raw numerical metrics
+            document.getElementById('score-lesen').innerText = `${scoreLesen} / 10 richtig`;
+            document.getElementById('score-hoeren').innerText = `${scoreHoeren} / 5 richtig`;
+            document.getElementById('writing-metrics').innerText = `${wordCount} Wörter (Konnektoren-Treffer: B1=${detectedB1}, B2=${detectedB2}, C1=${detectedC1})`;
+            document.getElementById('final-level').innerText = estimatedLevel;
+
+            // Generate detailed personalized justification text
+            generateJustification(estimatedLevel, scoreLesen, scoreHoeren, wordCount, detectedB1, detectedB2, detectedC1);
+        }
+
+        function generateJustification(level, lesen, hoeren, words, b1, b2, c1) {
+            let html = '';
+            
+            const intro = `Basierend auf Ihrer aggregierten Leistung im Leseverstehen (${lesen}/10 Punkte), Hörverstehen (${hoeren}/5 Punkte) und der morphosyntaktischen Struktur Ihres Textes wurden Sie auf dem Niveau <strong>${level}</strong> eingestuft. `;
+            
+            let coreAnalysis = '';
+            switch(level) {
+                case 'A1':
+                    coreAnalysis = `Sie verfügen über grundlegendes sprachliches Basiswissen. Im Leseverstehen und Hörverstehen können Sie vertraute, alltägliche Wörter und ganz einfache Sätze verstehen, sofern langsam gesprochen wird. Ihr geschriebener Text besteht hauptsächlich aus isolierten Phrasen und einfachen Wortfolgen. Fortgeschrittene Satzverknüpfungen fehlen weitgehend.`;
+                    break;
+                case 'A2':
+                    coreAnalysis = `Sie können Sätze und häufig gebrauchte Ausdrücke verstehen, die mit direkt relevanten Lebensbereichen zusammenhängen. Im Leseverstehen gelingt die Zuordnung elementarer grammatikalischer Strukturen (wie Perfektbildung). Ihr schriftlicher Ausdruck zeigt die Fähigkeit, einfache Sätze aneinanderzureihen, weist jedoch noch begrenzte Kohäsionsmittel auf (Wortschatz- und Strukturwiederholungen erkennbar).`;
+                    break;
+                case 'B1':
+                    coreAnalysis = `Sie besitzen eine solide autonome Sprachverwendung im Alltag. Hauptpunkte können verstanden werden, wenn klare Standardsprache verwendet wird. In Ihrem geschriebenen Text wurden grundlegende subordinierende Konnektoren (wie 'weil' oder 'dass') nachgewiesen, was zeigt, dass Sie Haupt- und Nebensätze logisch verknüpfen können. Der Wortschatz reicht aus, um Hauptgedanken zu formulieren.`;
+                    break;
+                case 'B2':
+                    coreAnalysis = `Sie zeigen ein fortgeschrittenes Verständnis komplexer Texte. Syntaktische Verknüpfungen wie proportionale Konjunktionen ('je... desto') oder konzessive Strukturen ('obwohl') wurden erfolgreich bewältigt oder in Ihrem Aufsatz nachgewiesen. Ihr geschriebener Text besitzt eine klare Strukturierung und nutzt treffende argumentative Abwägungen zur Homeoffice-Thematik mit adäquatem Fachvokabular.`;
+                    break;
+                case 'C1':
+                    coreAnalysis = `Herausragende Leistung! Sie verstehen ein breites Spektrum anspruchsvoller, längerer Texte und erfassen auch implizite Bedeutungen (wie den abstrakten Radiobericht zur Digitalisierung). Im schriftlichen Ausdruck nutzen Sie komplexe adverbiale Bestimmungen, gehobene Präpositionen mit Genitiv (z.B. 'angesichts') und verfügen über einen breiten, differenzierten Wortschatz, der ein präzises Argumentieren ohne erkennbare Formulierungseinschränkungen ermöglicht.`;
+                    break;
+            }
+
+            let advice = '<br><br><strong>Empfehlung für Ihren weiteren Lernweg:</strong> ';
+            if(level === 'A1' || level === 'A2') {
+                advice += 'Fokussieren Sie sich auf den systematischen Aufbau des Grundwortschatzes und die Festigung grundlegender Satzstrukturen (Subjekt-Verb-Objekt-Stellung, Hauptsatzverbindungen).';
+            } else if(level === 'B1' || level === 'B2') {
+                advice += 'Arbeiten Sie verstärkt an der stilistischen Varianz, idiomatischen Redewendungen sowie komplexeren Satzperioden (z.B. Partizipialattribute, Passiversatzformen), um mehr Flexibilität im Ausdruck zu erlangen.';
+            } else {
+                advice += 'Sie haben bereits ein sehr hohes Niveau erreicht. Zur Perfektionierung empfiehlt sich das Studium hochspezifischer Fachliteratur, stilistisches Nuancentraining oder akademisches Schreiben.';
+            }
+
+            document.getElementById('justification-text').innerHTML = intro + coreAnalysis + advice;
+        }
+
+        function restartTest() {
+            currentScreen = 1;
+            document.getElementById('schreiben-input').value = '';
+            document.getElementById('word-count').innerText = '0';
+            
+            // Clear all radio inputs
+            const radios = document.querySelectorAll('input[type="radio"]');
+            radios.forEach(r => r.checked = false);
+            
+            // Clear styles
+            document.querySelectorAll('.option-item label').forEach(lbl => lbl.classList.remove('selected'));
+            
+            hideError();
+            showScreen(1);
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, function(m) { return map[m]; });
+        }
+
+        // Run setup on execution
+        initTest();
+    </script>
+</body>
+</html>
